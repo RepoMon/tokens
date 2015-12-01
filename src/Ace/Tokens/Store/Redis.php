@@ -1,4 +1,4 @@
-<?php namespace Sce\Tokens\Store;
+<?php namespace Ace\Tokens\Store;
 
 use Predis\Response\ServerException;
 use Ace\Tokens\Configuration;
@@ -21,7 +21,6 @@ class Redis implements StoreInterface
      * @var Client
      */
     private $client;
-
 
     /**
      * @param Configuration $config

@@ -1,4 +1,4 @@
-<?php namespace Sce\Tokens\Provider;
+<?php namespace Ace\Tokens\Provider;
 
 use Predis\Client;
 use Silex\Application;
@@ -28,6 +28,6 @@ class StoreProvider implements ServiceProviderInterface
             $store = new RedisStore($app['config'], new Client($dsn));
         }
 
-        $app['git_repo_store'] = $store;
+        $app['store'] = $store;
     }
 }

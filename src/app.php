@@ -11,45 +11,44 @@ use Monolog\Logger;
 use Monolog\Handler\ErrorLogHandler;
 
 use Ace\Tokens\Provider\ConfigProvider;
-
-use Predis\Client;
+use Ace\Tokens\Provider\StoreProvider;
 
 $app = new Application();
 
 $app['logger'] = new Logger('log');
 $app['logger']->pushHandler(new ErrorLogHandler());
 
-
 $app->register(new ConfigProvider());
-
+$app->register(new StoreProvider());
 
 /**
  * Return token for the key
  */
-$app->get('/tokens/{key}', function(Request $request) use ($app){
+$app->get('/tokens/{key}', function(Request $request) use ($app, $key){
 
-    // get token from redis
-
-    // decrypt
-
-    // return value
+    return new Response($app['store']->get($key), 200);
 
 });
 
 /**
  * Add token for the key
  */
-$app->put('/tokens/{key}', function(Request $request) use ($app){
+$app->put('/tokens/{key}', function(Request $request) use ($app, $key){
 
+    $app['store']->add($key, $request->get('token'));
+
+    return new Response('', 200);
 
 });
 
 /**
  * Remove token for the key
  */
-$app->delete('/tokens/{key}', function(Request $request) use ($app){
+$app->delete('/tokens/{key}', function(Request $request) use ($app, $key){
 
+    $app['store']->remove($key);
 
+    return new Response('', 204);
 });
 
 /**
