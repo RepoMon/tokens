@@ -38,6 +38,13 @@ class Redis implements StoreInterface
      */
     public function get($key)
     {
+        try {
+            $encrypted = $this->client->get($key);
+            // decrypt
+            return openssl_decrypt($encrypted, $this->config->getEncryptionMethod(), $this->config->getEncryptionKey());
+        } catch (ServerException $ex) {
+            throw new UnavailableException($ex->getMessage());
+        }
     }
 
     /**
@@ -45,11 +52,27 @@ class Redis implements StoreInterface
      */
     public function add($key, $value)
     {
+        // $nonce length must be exactly 128 bits (16 bytes)
+
+        // encrypt
+        $encrypted = openssl_encrypt($value, $this->config->getEncryptionMethod(), $this->config->getEncryptionKey());
+
+        try {
+            $this->client->set($key, $encrypted);
+        } catch (ServerException $ex) {
+            throw new UnavailableException($ex->getMessage());
+        }
     }
 
+    /**
+     * @param $key
+     */
     public function remove($key)
     {
-
+        try {
+            $this->client->del([$key]);
+        } catch (ServerException $ex) {
+            throw new UnavailableException($ex->getMessage());
+        }
     }
-
  }

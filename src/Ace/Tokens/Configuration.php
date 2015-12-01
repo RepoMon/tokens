@@ -6,11 +6,35 @@
  */
 class Configuration
 {
+    /**
+     * key length must be exactly 256 bits (32 bytes)
+     * @return string
+     */
     public function getEncryptionKey()
     {
-
+        return getenv('ENCRYPTION_KEY');
     }
 
+    /**
+     * @return string
+     */
+    public function getEncryptionMethod()
+    {
+        return 'AES-256-CTR';
+    }
+
+    /**
+     * nonce length must be exactly 128 bits (16 bytes)
+     * @return string
+     */
+    public function getEncryptionNonce()
+    {
+        return '';
+    }
+
+    /**
+     * @return string
+     */
     public function getStoreDsn()
     {
         // should contain a string like this 'tcp://172.17.0.154:6379'

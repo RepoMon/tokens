@@ -24,7 +24,7 @@ $app->register(new StoreProvider());
 /**
  * Return token for the key
  */
-$app->get('/tokens/{key}', function(Request $request) use ($app, $key){
+$app->get('/tokens/{key}', function(Request $request, $key) use ($app){
 
     return new Response($app['store']->get($key), 200);
 
@@ -33,7 +33,7 @@ $app->get('/tokens/{key}', function(Request $request) use ($app, $key){
 /**
  * Add token for the key
  */
-$app->put('/tokens/{key}', function(Request $request) use ($app, $key){
+$app->put('/tokens/{key}', function(Request $request, $key) use ($app){
 
     $app['store']->add($key, $request->get('token'));
 
@@ -44,7 +44,7 @@ $app->put('/tokens/{key}', function(Request $request) use ($app, $key){
 /**
  * Remove token for the key
  */
-$app->delete('/tokens/{key}', function(Request $request) use ($app, $key){
+$app->delete('/tokens/{key}', function(Request $request, $key) use ($app){
 
     $app['store']->remove($key);
 
@@ -55,7 +55,7 @@ $app->delete('/tokens/{key}', function(Request $request) use ($app, $key){
  */
 $app->error(function (Exception $e, $code) use($app) {
     $app['logger']->addError($e->getMessage());
-    return new Response($e->getMessage());
+    return new Response($e->getMessage(), $e->getCode());
 });
 
 return $app;

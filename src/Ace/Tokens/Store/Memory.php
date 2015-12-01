@@ -27,10 +27,10 @@ class Memory implements StoreInterface
      */
     public function get($key)
     {
-        if (in_array($key, $this->data)){
+        if (isset($this->data[$key])){
             return $this->data[$key];
         } else {
-            throw new UnavailableException;
+            throw new MissingException("Key '$key' not found");
         }
     }
 
