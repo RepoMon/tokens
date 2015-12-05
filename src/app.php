@@ -12,6 +12,7 @@ use Monolog\Handler\ErrorLogHandler;
 
 use Ace\Tokens\Provider\ConfigProvider;
 use Ace\Tokens\Provider\StoreProvider;
+use Ace\Tokens\Provider\RabbitConsumerProvider;
 
 $app = new Application();
 
@@ -20,6 +21,7 @@ $app['logger']->pushHandler(new ErrorLogHandler());
 
 $app->register(new ConfigProvider());
 $app->register(new StoreProvider());
+//$app->register(new RabbitConsumerProvider());
 
 /**
  * Return token for the key

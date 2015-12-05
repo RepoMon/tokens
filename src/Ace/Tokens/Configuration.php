@@ -12,7 +12,7 @@ class Configuration
      */
     public function getEncryptionKey()
     {
-        return getenv('ENCRYPTION_KEY');
+        return getenv('TOKEN_ENCRYPTION_KEY');
     }
 
     /**
@@ -39,5 +39,30 @@ class Configuration
     {
         // should contain a string like this 'tcp://172.17.0.154:6379'
         return getenv('REDIS_PORT');
+    }
+
+    /**
+     * @return string
+     */
+    public function getRabbitHost()
+    {
+        return getenv('RABBITMQ_PORT_5672_TCP_ADDR');
+    }
+
+    /**
+     * @return string
+     */
+    public function getRabbitPort()
+    {
+        return getenv('RABBITMQ_PORT_5672_TCP_PORT');
+    }
+
+    /**
+     * @return string
+     */
+    public function getRabbitChannelName()
+    {
+        // use an env var for the channel name too
+        return 'repo-mon.main';
     }
 }
