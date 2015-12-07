@@ -10,7 +10,8 @@ RUN apt-get update -qq && \
     php5-cli \
     php5-intl \
     php5-fpm \
-    curl
+    curl \
+    git
 
 RUN curl -sS https://getcomposer.org/installer | php \
   && mv composer.phar /usr/bin/composer
