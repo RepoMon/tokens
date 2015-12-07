@@ -11,6 +11,11 @@ require_once __DIR__ . '/vendor/autoload.php';
 
 use Ace\Tokens\Store\StoreFactory;
 use Ace\Tokens\Consumer\ConsumerFactory;
+use Monolog\Logger;
+use Monolog\Handler\StreamHandler;
+
+$logger = new Logger('log');
+$logger->pushHandler(new StreamHandler('/var/log/consume.log', Logger::DEBUG));
 
 $config = new Ace\Tokens\Configuration;
 
@@ -20,10 +25,10 @@ $store = $store_factory->create();
 $consumer_factory = new ConsumerFactory($config);
 $consumer = $consumer_factory->create();
 
-$callback = function($event) use ($store) {
+$callback = function($event) use ($store, $logger) {
 
     // add a token
-    echo " Received ", $event->body, "\n";
+    $logger->notice(sprintf("received %s\n", $event->body));
 
     $event = json_decode($event->body);
 
