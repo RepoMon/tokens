@@ -4,34 +4,33 @@
  * Date: 05/12/15
  *
  * Consumes events
- * Updates schedule
+ * Adds tokens to the store
  *
  */
 require_once __DIR__ . '/vendor/autoload.php';
 
-use PhpAmqpLib\Connection\AMQPStreamConnection;
+use Ace\Tokens\Store\StoreFactory;
+use Ace\Tokens\Consumer\ConsumerFactory;
 
-$channel_name = 'repo-mon.main';
-$queue_host = getenv('RABBITMQ_PORT_5672_TCP_ADDR');
-$queue_port = getenv('RABBITMQ_PORT_5672_TCP_PORT');
+$config = new Ace\Tokens\Configuration;
 
-printf(" rabbit host %s port %s\n", $queue_host, $queue_port);
+$store_factory = new StoreFactory($config);
+$store = $store_factory->create();
 
-$connection = new AMQPStreamConnection($queue_host, $queue_port, 'guest', 'guest');
-$channel = $connection->channel();
-$channel->queue_declare($channel_name, false, false, false, false);
+$consumer_factory = new ConsumerFactory($config);
+$consumer = $consumer_factory->create();
 
-echo ' Waiting for events. To exit press CTRL+C', "\n";
+$callback = function($event) use ($store) {
 
-$callback = function($event) {
+    // add a token
     echo " Received ", $event->body, "\n";
+
+    $event = json_decode($event->body);
+
+    if ($event['name'] === 'repo-mon.token.added'){
+        $store->add($event['data']['user'], $event['data']['token']);
+    }
+
 };
 
-$channel->basic_consume($channel_name, '', false, true, false, false, $callback);
-
-while(count($channel->callbacks)) {
-    $channel->wait();
-}
-
-$channel->close();
-$connection->close();
+$consumer->connect($callback);

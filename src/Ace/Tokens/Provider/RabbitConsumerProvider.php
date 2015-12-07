@@ -1,9 +1,8 @@
 <?php namespace Ace\Tokens\Provider;
 
+use Ace\Tokens\Consumer\ConsumerFactory;
 use Silex\Application;
 use Silex\ServiceProviderInterface;
-
-use Ace\Tokens\RabbitConsumer;
 
 /**
  * @author timrodger
@@ -24,12 +23,7 @@ class RabbitConsumerProvider implements ServiceProviderInterface
      */
     public function boot(Application $app)
     {
-        $config = $app['config'];
-
-        $app['rabbit-client'] = new RabbitConsumer(
-            $config->getRabbitHost(),
-            $config->getRabbitPort(),
-            $config->getRabbitChannelName()
-        );
+        $factory = new ConsumerFactory($app['config']);
+        $app['rabbit-client'] = $factory->create();
     }
 }

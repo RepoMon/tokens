@@ -46,7 +46,7 @@ class Configuration
      */
     public function getRabbitHost()
     {
-        return getenv('RABBITMQ_PORT_5672_TCP_ADDR');
+        return getenv('rabbitmq');
     }
 
     /**
@@ -54,7 +54,7 @@ class Configuration
      */
     public function getRabbitPort()
     {
-        return getenv('RABBITMQ_PORT_5672_TCP_PORT');
+        return 5672;
     }
 
     /**
