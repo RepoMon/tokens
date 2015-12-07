@@ -30,7 +30,7 @@ $callback = function($event) use ($store, $logger) {
     // add a token
     $logger->notice(sprintf("received %s\n", $event->body));
 
-    $event = json_decode($event->body);
+    $event = json_decode($event->body, true);
 
     if ($event['name'] === 'repo-mon.token.added'){
         $store->add($event['data']['user'], $event['data']['token']);
