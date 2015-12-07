@@ -46,7 +46,7 @@ class Configuration
      */
     public function getRabbitHost()
     {
-        return getenv('rabbitmq');
+        return 'rabbitmq';
     }
 
     /**
