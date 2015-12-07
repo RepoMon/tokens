@@ -45,9 +45,13 @@ class RabbitConsumer
         $connection = new AMQPStreamConnection($this->host, $this->port, 'guest', 'guest');
         $channel = $connection->channel();
 
-        $channel->queue_declare($this->channel_name, false, false, false, false);
+        $channel->exchange_declare($this->channel_name, 'fanout', false, false, false);
 
-        $channel->basic_consume($this->channel_name, '', false, true, false, false, $callback);
+        list($queue_name, ,) = $channel->queue_declare("", false, false, true, false);
+
+        $channel->queue_bind($queue_name, 'logs');
+
+        $channel->basic_consume($queue_name, '', false, true, false, false, $callback);
 
         while(count($channel->callbacks)) {
             $channel->wait();
