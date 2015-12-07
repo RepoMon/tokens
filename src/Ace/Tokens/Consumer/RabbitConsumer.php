@@ -49,7 +49,7 @@ class RabbitConsumer
 
         list($queue_name, ,) = $channel->queue_declare("", false, false, true, false);
 
-        $channel->queue_bind($queue_name, 'logs');
+        $channel->queue_bind($queue_name, $this->channel_name);
 
         $channel->basic_consume($queue_name, '', false, true, false, false, $callback);
 
