@@ -40,6 +40,9 @@ class Redis implements StoreInterface
     {
         try {
             $encrypted = $this->client->get($key);
+            if (empty($encrypted)){
+                throw new MissingException("No token found for $key");
+            }
             // decrypt
             return openssl_decrypt($encrypted, $this->config->getEncryptionMethod(), $this->config->getEncryptionKey());
         } catch (ServerException $ex) {
@@ -71,6 +74,18 @@ class Redis implements StoreInterface
     {
         try {
             $this->client->del([$key]);
+        } catch (ServerException $ex) {
+            throw new UnavailableException($ex->getMessage());
+        }
+    }
+
+    /**
+     * @return array
+     */
+    public function all()
+    {
+        try {
+            return $this->client->keys('*');
         } catch (ServerException $ex) {
             throw new UnavailableException($ex->getMessage());
         }

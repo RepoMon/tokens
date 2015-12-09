@@ -54,6 +54,17 @@ $app->delete('/tokens/{key}', function(Request $request, $key) use ($app){
 });
 
 /**
+ * List all keys
+ */
+$app->get('/tokens', function(Request $request) use ($app){
+
+    return new Response(
+        json_encode($app['store']->all(), JSON_UNESCAPED_SLASHES),
+        200
+    );
+});
+
+/**
  */
 $app->error(function (Exception $e, $code) use($app) {
     $app['logger']->addError($e->getMessage());

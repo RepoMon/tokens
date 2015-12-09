@@ -12,4 +12,6 @@ interface StoreInterface
 
     public function remove($key);
 
+    public function all();
+
 }

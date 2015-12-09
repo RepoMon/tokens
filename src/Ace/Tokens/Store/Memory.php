@@ -49,4 +49,12 @@ class Memory implements StoreInterface
     {
         unset($this->data[$key]);
     }
+
+    /**
+     * @return array
+     */
+    public function all()
+    {
+        return array_keys($this->data);
+    }
 }
