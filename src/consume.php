@@ -25,4 +25,4 @@ $callback = function($msg) use ($app) {
 
 };
 
-$app['rabbit-client']->connect($callback);
+$app['queue-client']->connect($callback);

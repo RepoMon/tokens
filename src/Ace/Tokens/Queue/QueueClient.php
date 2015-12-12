@@ -1,4 +1,4 @@
-<?php namespace Ace\Tokens\Consumer;
+<?php namespace Ace\Tokens\Queue;
 
 use PhpAmqpLib\Connection\AMQPStreamConnection;
 
@@ -6,7 +6,7 @@ use PhpAmqpLib\Connection\AMQPStreamConnection;
  * @author timrodger
  * Date: 05/12/15
  */
-class RabbitConsumer
+class QueueClient
 {
     /**
      * @var string

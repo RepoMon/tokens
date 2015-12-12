@@ -1,6 +1,6 @@
 <?php namespace Ace\Tokens\Provider;
 
-use Ace\Tokens\Consumer\ConsumerFactory;
+use Ace\Tokens\Queue\QueueClientFactory;
 use Silex\Application;
 use Silex\ServiceProviderInterface;
 
@@ -8,7 +8,7 @@ use Silex\ServiceProviderInterface;
  * @author timrodger
  * Date: 23/06/15
  */
-class RabbitConsumerProvider implements ServiceProviderInterface
+class QueueClientProvider implements ServiceProviderInterface
 {
     /**
      * @param Application $app
@@ -23,7 +23,7 @@ class RabbitConsumerProvider implements ServiceProviderInterface
      */
     public function boot(Application $app)
     {
-        $factory = new ConsumerFactory($app['config']);
-        $app['rabbit-client'] = $factory->create();
+        $factory = new QueueClientFactory($app['config']);
+        $app['queue-client'] = $factory->create();
     }
 }

@@ -1,13 +1,13 @@
-<?php namespace Ace\Tokens\Consumer;
+<?php namespace Ace\Tokens\Queue;
 
 use Ace\Tokens\Configuration;
-use Ace\Tokens\Consumer\RabbitConsumer;
+use Ace\Tokens\Queue\QueueClient;
 
 /**
  * @author timrodger
  * Date: 07/12/15
  */
-class ConsumerFactory
+class QueueClientFactory
 {
     /**
      * @var Configuration
@@ -23,11 +23,11 @@ class ConsumerFactory
     }
 
     /**
-     * @return \Ace\Tokens\Consumer\RabbitConsumer
+     * @return QueueClient
      */
     public function create()
     {
-        return new RabbitConsumer(
+        return new QueueClient(
             $this->config->getRabbitHost(),
             $this->config->getRabbitPort(),
             $this->config->getRabbitChannelName()
