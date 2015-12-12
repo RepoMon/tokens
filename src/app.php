@@ -21,7 +21,7 @@ $app['logger']->pushHandler(new ErrorLogHandler());
 
 $app->register(new ConfigProvider());
 $app->register(new StoreProvider());
-//$app->register(new RabbitConsumerProvider());
+$app->register(new RabbitConsumerProvider());
 
 /**
  * Return token for the key

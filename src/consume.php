@@ -7,35 +7,22 @@
  * Adds tokens to the store
  *
  */
-require_once __DIR__ . '/vendor/autoload.php';
 
-use Ace\Tokens\Store\StoreFactory;
-use Ace\Tokens\Consumer\ConsumerFactory;
-use Monolog\Logger;
-use Monolog\Handler\StreamHandler;
+// create the application and boot start it, but don't run
+$app = require_once __DIR__ . '/app.php';
+$app->boot();
 
-$logger = new Logger('log');
-$logger->pushHandler(new StreamHandler('/var/log/consume.log', Logger::DEBUG));
-
-$config = new Ace\Tokens\Configuration;
-
-$store_factory = new StoreFactory($config);
-$store = $store_factory->create();
-
-$consumer_factory = new ConsumerFactory($config);
-$consumer = $consumer_factory->create();
-
-$callback = function($event) use ($store, $logger) {
+$callback = function($msg) use ($app) {
 
     // add a token
-    $logger->notice(sprintf("received %s\n", $event->body));
+    $app['logger']->notice(sprintf("received %s\n", $msg->body));
 
-    $event = json_decode($event->body, true);
+    $event = json_decode($msg->body, true);
 
     if ($event['name'] === 'repo-mon.token.added'){
-        $store->add($event['data']['user'], $event['data']['token']);
+        $app['store']->add($event['data']['user'], $event['data']['token']);
     }
 
 };
 
-$consumer->connect($callback);
+$app['rabbit-client']->connect($callback);
