@@ -20,7 +20,15 @@ class Configuration
      */
     public function getEncryptionMethod()
     {
-        return 'AES-256-CTR';
+        return 'AES-256-CBC';
+    }
+
+    /**
+     * @return integer
+     */
+    public function getEncryptionIvSize()
+    {
+        return 16;
     }
 
     /**

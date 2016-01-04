@@ -1,21 +1,18 @@
 <?php namespace Ace\Tokens\Store;
 
 use Predis\Response\ServerException;
-use Ace\Tokens\Configuration;
 use Predis\Client;
-use Ace\Tokens\Store\UnavailableException;
 
 /**
- *
- * @author timrodger
- * Date: 17/07/15
+ * Stores tokens using redis
+ * @package Ace\Tokens\Store
  */
 class Redis implements StoreInterface
 {
     /**
-     * @var Configuration
+     * @var Encryption
      */
-    private $config;
+    private $encryption;
 
     /**
      * @var Client
@@ -23,17 +20,19 @@ class Redis implements StoreInterface
     private $client;
 
     /**
-     * @param Configuration $config
+     * @param Encryption $encryption
+     * @param Client $client
      */
-    public function __construct(Configuration $config, Client $client)
+    public function __construct(Encryption $encryption, Client $client)
     {
-        $this->config = $config;
+        $this->encryption = $encryption;
         $this->client = $client;
     }
 
     /**
      * @param $key
      * @return string
+     * @throws MissingException
      * @throws UnavailableException
      */
     public function get($key)
@@ -43,8 +42,8 @@ class Redis implements StoreInterface
             if (empty($encrypted)){
                 throw new MissingException("No token found for $key");
             }
-            // decrypt
-            return openssl_decrypt($encrypted, $this->config->getEncryptionMethod(), $this->config->getEncryptionKey());
+            // decrypt to token after retrieval
+            return $this->encryption->decrypt($encrypted);
         } catch (ServerException $ex) {
             throw new UnavailableException($ex->getMessage());
         }
@@ -52,16 +51,14 @@ class Redis implements StoreInterface
 
     /**
      * @param $key
+     * @param $value
+     * @throws UnavailableException
      */
     public function add($key, $value)
     {
-        // $nonce length must be exactly 128 bits (16 bytes)
-
-        // encrypt
-        $encrypted = openssl_encrypt($value, $this->config->getEncryptionMethod(), $this->config->getEncryptionKey());
-
+        // encrypt the tokens before storing in redis
         try {
-            $this->client->set($key, $encrypted);
+            $this->client->set($key, $this->encryption->encrypt($value));
         } catch (ServerException $ex) {
             throw new UnavailableException($ex->getMessage());
         }
@@ -69,6 +66,7 @@ class Redis implements StoreInterface
 
     /**
      * @param $key
+     * @throws UnavailableException
      */
     public function remove($key)
     {
@@ -81,6 +79,7 @@ class Redis implements StoreInterface
 
     /**
      * @return array
+     * @throws UnavailableException
      */
     public function all()
     {

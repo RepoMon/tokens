@@ -6,7 +6,6 @@ use Predis\Client;
 use Ace\Tokens\Store\Redis as RedisStore;
 use Ace\Tokens\Store\Memory as MemoryStore;
 
-
 /**
  * @author timrodger
  * Date: 07/12/15
@@ -32,12 +31,19 @@ class StoreFactory
     public function create()
     {
         // instantiate a different store depending on the value of $app['config']->getStoreDsn()
+
         $dsn = $this->config->getStoreDsn();
 
+        $encryption = new Encryption(
+            $this->config->getEncryptionMethod(),
+            $this->config->getEncryptionKey(),
+            $this->config->getEncryptionIvSize()
+        );
+
         if ('MEMORY' == $dsn) {
-            $store = new MemoryStore($this->config);
+            $store = new MemoryStore($encryption);
         } else {
-            $store = new RedisStore($this->config, new Client($dsn));
+            $store = new RedisStore($encryption, new Client($dsn));
         }
 
         return $store;

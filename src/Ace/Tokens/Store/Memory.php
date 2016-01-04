@@ -3,8 +3,8 @@
 use Ace\Tokens\Configuration;
 
 /**
- * @author timrodger
- * Date: 29/03/15
+ * Stores tokens in memory
+ * @package Ace\Tokens\Store
  */
 class Memory implements StoreInterface
 {
@@ -14,10 +14,16 @@ class Memory implements StoreInterface
     private $data = [];
 
     /**
-     * @param Configuration $config
+     * @var Encryption
      */
-    public function __construct(Configuration $config)
+    private $encryption;
+
+    /**
+     * @param Encryption $encryption
+     */
+    public function __construct(Encryption $encryption)
     {
+        $this->encryption = $encryption;
     }
 
     /**
@@ -28,7 +34,7 @@ class Memory implements StoreInterface
     public function get($key)
     {
         if (isset($this->data[$key])){
-            return $this->data[$key];
+            return $this->encryption->decrypt($this->data[$key]);
         } else {
             throw new MissingException("Key '$key' not found");
         }
@@ -39,7 +45,7 @@ class Memory implements StoreInterface
      */
     public function add($key, $value)
     {
-        $this->data [$key]= $value;
+        $this->data [$key]= $this->encryption->encrypt($value);
     }
 
     /**
