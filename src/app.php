@@ -44,17 +44,7 @@ $app->put('/tokens/{key}', function(Request $request, $key) use ($app){
 });
 
 /**
- * Remove token for the key
- */
-$app->delete('/tokens/{key}', function(Request $request, $key) use ($app){
-
-    $app['store']->remove($key);
-
-    return new Response('', 204);
-});
-
-/**
- * List all keys
+ * List all token keys - ie. owner names
  */
 $app->get('/tokens', function(Request $request) use ($app){
 

@@ -5,7 +5,6 @@
  *
  * Consumes events
  * Adds tokens to the store
- *
  */
 
 // create the application and boot start it, but don't run
@@ -21,6 +20,8 @@ $callback = function($msg) use ($app) {
 
     if ($event['name'] === 'repo-mon.token.added'){
         $app['store']->add($event['data']['user'], $event['data']['token']);
+    } else if ($event['name'] === 'repo-mon.token.removed'){
+        $app['store']->remove($event['data']['user']);
     }
 
 };
