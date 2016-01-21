@@ -39,12 +39,16 @@ class AppIntegrationTest extends WebTestCase
         $this->assertResponseContents('secret');
     }
 
-    public function testDeleteReturnsSuccess()
+    public function testGetAllReturnsSuccess()
     {
         $this->givenAClient();
-        $this->client->request('DELETE', '/tokens/missing');
+        $this->client->request('PUT', '/tokens/xxx', ['token' => 'secret']);
+        $this->client->request('PUT', '/tokens/yyy', ['token' => 'another secret']);
+        $this->client->request('PUT', '/tokens/abc', ['token' => 'string q']);
+        $this->client->request('GET', '/tokens');
 
-        $this->thenTheResponseIs204();
+        $this->thenTheResponseIsSuccess();
+        $this->assertResponseContents(json_encode(['xxx', 'yyy','abc']));
     }
 
     private function givenAClient()
@@ -74,6 +78,6 @@ class AppIntegrationTest extends WebTestCase
 
     private function assertResponseContents($expected_body)
     {
-        $this->assertSame($expected_body, $this->client->getResponse()->getContent());
+        $this->assertEquals($expected_body, $this->client->getResponse()->getContent());
     }
 }
