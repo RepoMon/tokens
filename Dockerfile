@@ -1,8 +1,8 @@
-FROM php:latest
+FROM php:7-fpm
 
 MAINTAINER Tim Rodger <tim.rodger@gmail.com>
 
-EXPOSE 80
+EXPOSE 9000
 
 RUN apt-get update -qq && \
     apt-get install -y \
@@ -33,8 +33,6 @@ WORKDIR /home/app/public
 
 RUN chmod +x /home/app/run.sh
 RUN chmod +x /home/app/run-all.sh
-
-# RUN /home/app/run.sh &
 
 USER root
 
