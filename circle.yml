@@ -18,8 +18,7 @@ dependencies:
 
 test:
   override:
-    - docker run -d timjr/token;
-    - docker exec -ti timjr/token /home/app/bin/phpunit home/app/Test
+    - docker run timjr/token /home/app/bin/phpunit /home/app/Test
 
 deployment:
   hub:
