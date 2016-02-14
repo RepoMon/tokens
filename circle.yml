@@ -18,9 +18,8 @@ dependencies:
 
 test:
   override:
-    - cd src
-    - composer install
-    - ./bin/phpunit -c phpunit.xml
+    - docker run -d timjr/token;
+    - docker exec -ti timjr/token /home/app/bin/phpunit home/app/Test
 
 deployment:
   hub:
