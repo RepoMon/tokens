@@ -1,5 +1,5 @@
 general:
-  build_dir: src
+  build_dir: .
 
 machine:
   services:
@@ -18,7 +18,7 @@ dependencies:
 
 test:
   override:
-    - phpunit -c phpunit.xml
+    - cd src && phpunit -c phpunit.xml
 
 deployment:
   hub:
