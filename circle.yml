@@ -18,7 +18,9 @@ dependencies:
 
 test:
   override:
-    - cd src && phpunit -c phpunit.xml
+    - cd src
+    - composer install
+    - ./bin/phpunit -c phpunit.xml
 
 deployment:
   hub:
