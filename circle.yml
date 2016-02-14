@@ -2,9 +2,27 @@ general:
   build_dir: src
 
 machine:
+  services:
+    - docker
   php:
     version: 7.0.0RC7
+
+dependencies:
+  cache_directories:
+    - "~/docker"
+  override:
+    - docker info
+    - if [[ -e ~/docker/image.tar ]]; then docker load --input ~/docker/image.tar; fi
+    - docker build -t timjr/token .
+    - mkdir -p ~/docker; docker save timjr/token > ~/docker/image.tar
 
 test:
   override:
     - phpunit -c phpunit.xml
+
+deployment:
+  hub:
+    branch: master
+    commands:
+      - docker login -e $DOCKER_EMAIL -u $DOCKER_USER -p $DOCKER_PASS
+      - docker push timjr/token
